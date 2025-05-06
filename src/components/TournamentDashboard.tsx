@@ -39,15 +39,17 @@ const TournamentDashboard: React.FC<TournamentDashboardProps> = ({ tournaments, 
             <ListItem key={t.id} secondaryAction={
               <IconButton edge="end" onClick={() => onDelete(t.id)}><DeleteIcon /></IconButton>
             }>
-              <TextField
-                value={t.name}
-                onChange={e => onRename(t.id, e.target.value)}
-                variant="standard"
-                sx={{ minWidth: 120, mr: 2 }}
-              />
-              <Button variant="outlined" size="small" onClick={() => onSelect(t.id)}>
-                Открыть
-              </Button>
+              <Box sx={{ display: 'flex', alignItems: 'center', width: '100%', gap: 2 }}>
+                <TextField
+                  value={t.name}
+                  onChange={e => onRename(t.id, e.target.value)}
+                  variant="standard"
+                  sx={{ flexGrow: 1 }}
+                />
+                <Button variant="outlined" size="small" onClick={() => onSelect(t.id)}>
+                  Открыть
+                </Button>
+              </Box>
             </ListItem>
           ))}
         </List>
