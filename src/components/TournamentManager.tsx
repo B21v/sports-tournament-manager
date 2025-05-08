@@ -45,6 +45,22 @@ const TournamentManager: React.FC<TournamentManagerProps> = ({ tournament, onUpd
     }
   };
 
+  const addTeams = (names: string[]) => {
+    const newTeams = names
+      .filter(name => name.trim())
+      .map(name => ({
+        id: uuidv4(),
+        name: name.trim()
+      }));
+    if (newTeams.length) {
+      saveTournament({
+        ...localTournament,
+        teams: [...localTournament.teams, ...newTeams]
+      });
+    }
+    setNewTeamName('');
+  };
+
   const removeTeam = (teamId: string) => {
     saveTournament({
       ...localTournament,
@@ -164,6 +180,7 @@ const TournamentManager: React.FC<TournamentManagerProps> = ({ tournament, onUpd
           newTeamName={newTeamName}
           onNewTeamNameChange={setNewTeamName}
           onAddTeam={addTeam}
+          onAddTeams={addTeams}
           onRemoveTeam={removeTeam}
           canGenerate={localTournament.teams.length >= 2 && localTournament.status === 'pending'}
           onGenerate={generateMatches}
