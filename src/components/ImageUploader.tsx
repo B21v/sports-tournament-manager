@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Box, Button, Typography, CircularProgress } from '@mui/material';
+import { Box, Button, Typography, CircularProgress, Paper } from '@mui/material';
 import { createWorker } from 'tesseract.js';
 import TeamListEditor from './TeamListEditor';
 
@@ -12,6 +12,7 @@ const ImageUploader: React.FC<ImageUploaderProps> = ({ onPlayersRecognized }) =>
   const [error, setError] = useState<string | null>(null);
   const [editorOpen, setEditorOpen] = useState(false);
   const [pendingTeams, setPendingTeams] = useState<string[]>([]);
+  const [rawText, setRawText] = useState<string | null>(null);
 
   const handleImageUpload = async (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
@@ -20,6 +21,7 @@ const ImageUploader: React.FC<ImageUploaderProps> = ({ onPlayersRecognized }) =>
     setIsProcessing(true);
     setError(null);
     setPendingTeams([]);
+    setRawText(null);
 
     try {
       const worker = await createWorker();
@@ -28,6 +30,8 @@ const ImageUploader: React.FC<ImageUploaderProps> = ({ onPlayersRecognized }) =>
       // @ts-ignore - Tesseract.js types are not complete
       const { data: { text } } = await worker.recognize(file, 'eng');
       await worker.terminate();
+
+      setRawText(text);
 
       // Новый способ: разбиваем на строки и ищем все пары в каждой строке
       const players: string[] = [];
@@ -90,6 +94,15 @@ const ImageUploader: React.FC<ImageUploaderProps> = ({ onPlayersRecognized }) =>
         <Typography color="error" sx={{ mt: 1 }}>
           {error}
         </Typography>
+      )}
+
+      {rawText && (
+        <Box sx={{ mt: 2 }}>
+          <Typography variant="subtitle2">Распознанный текст:</Typography>
+          <Paper sx={{ p: 1, whiteSpace: 'pre-wrap', maxHeight: 200, overflow: 'auto', background: '#fafafa' }}>
+            {rawText}
+          </Paper>
+        </Box>
       )}
 
       <TeamListEditor

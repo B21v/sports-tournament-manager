@@ -1,5 +1,6 @@
 import React from 'react';
 import { Dialog, DialogTitle, DialogContent, DialogActions, Button, TextField, Box, Typography } from '@mui/material';
+import DeleteIcon from '@mui/icons-material/Delete';
 
 interface ScoreDialogProps {
   open: boolean;
@@ -7,9 +8,10 @@ interface ScoreDialogProps {
   onChange: (v: string) => void;
   onSave: () => void;
   onClose: () => void;
+  onDelete?: () => void;
 }
 
-const ScoreDialog: React.FC<ScoreDialogProps> = ({ open, value, onChange, onSave, onClose }) => (
+const ScoreDialog: React.FC<ScoreDialogProps> = ({ open, value, onChange, onSave, onClose, onDelete }) => (
   <Dialog open={open} onClose={onClose} maxWidth="sm" fullWidth>
     <DialogTitle>Введите счёт матча</DialogTitle>
     <DialogContent>
@@ -34,6 +36,16 @@ const ScoreDialog: React.FC<ScoreDialogProps> = ({ open, value, onChange, onSave
       </Box>
     </DialogContent>
     <DialogActions>
+      {onDelete && (
+        <Button
+          onClick={onDelete}
+          color="error"
+          startIcon={<DeleteIcon />}
+          sx={{ mr: 'auto' }}
+        >
+          Удалить матч
+        </Button>
+      )}
       <Button onClick={onClose}>Отмена</Button>
       <Button onClick={onSave} variant="contained" color="primary">
         Сохранить
